@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 
 enum AppRoute {
-  splash,
+  home,
   login
 }
 
 extension AppRouteName on AppRoute {
   String get name => const {
-    AppRoute.splash: '/',
+    AppRoute.home: '/',
     AppRoute.login: '/login'
   }[this];
 }

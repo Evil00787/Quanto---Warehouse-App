@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ium_warehouse/routing/routes.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
 import 'package:ium_warehouse/src/views/login.dart';
-import 'package:ium_warehouse/src/views/splash.dart';
+import 'package:ium_warehouse/src/views/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       title: 'Quanto',
       initialRoute: '/',
       routes: {
+        AppRoute.home.name : f(HomePage()),
         AppRoute.login.name : f(LoginPage()),
-        AppRoute.splash.name : f(SplashPage())
       },
       theme: _createAppTheme(),
     );
