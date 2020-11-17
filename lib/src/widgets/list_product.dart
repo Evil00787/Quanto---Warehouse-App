@@ -166,7 +166,6 @@ class _ListProductState extends State<ListProduct> {
                           ),
                           onPressed: () {
                             Navigator.pop(context);
-                            //BlocProvider.of<ProductsCubit>(context).removeProduct();
                           },
                         ),
                       ),

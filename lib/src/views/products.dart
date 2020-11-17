@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/models/ui/product.dart';
+import 'package:ium_warehouse/src/widgets/custom_toast.dart';
 import 'package:ium_warehouse/src/widgets/list_product.dart';
 import 'package:ium_warehouse/src/widgets/manufacturer_section.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
@@ -27,11 +28,37 @@ class _ProductsState extends State<ProductsPage> {
               setState(() {
                 _section = _getProductList(state);
               });
+            else if(state is ProductsError) {
+              CustomToast(
+                state.message,
+                Icons.error_outline,
+                Colors.red,
+              ).show(context);
+              setState(() {
+                BlocProvider.of<ProductsCubit>(context).getProducts();
+              });
+            }
+
+            else if(state is ProductsUpdateSuccess) {
+              CustomToast(
+                "Success",
+                Icons.done_outlined,
+                Colors.green[300],
+              ).show(context);
+              setState(() {
+                BlocProvider.of<ProductsCubit>(context).getProducts();
+              });
+            }
+
           },
           builder: (context, state) {
             if (state is ProductsInitial) {
               BlocProvider.of<ProductsCubit>(context).getProducts();
-              return SizedBox.shrink();
+              return Expanded(
+                child: Center(
+                  child: CircularProgressIndicator()
+                ),
+              );
             }
             else if (state is ProductsError)
               return SizedBox.shrink();

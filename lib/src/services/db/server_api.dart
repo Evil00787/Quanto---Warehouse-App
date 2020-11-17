@@ -25,14 +25,23 @@ class ServerApi {
       log(exception.toString());
       return {'connection': false};
     }
+    try {
+      return jsonDecode(response.body);
 
-    return jsonDecode(response.body);
+    } catch(exception) {
+      return {"error" : "Error"};
+    }
   }
 
   dynamic getDb(String address) async {
     final response = await http.get(base + address, headers: headers);
     updateCookie(response);
-    return jsonDecode(response.body);
+    try {
+      return jsonDecode(response.body);
+
+    } catch(exception) {
+      return false;
+    }
   }
 
   void updateCookie(http.Response response) {

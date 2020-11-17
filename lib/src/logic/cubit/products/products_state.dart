@@ -19,24 +19,16 @@ class ProductsSuccess extends ProductsState {
 }
 
 class ProductsError extends ProductsState {
-  @override
-  List<Object> get props => [];
-}
+  final String message;
 
-class ProductsAddedSuccess extends ProductsState {
-  final List<UIProduct> products;
-
-  ProductsAddedSuccess(this.products);
+  ProductsError(this.message);
 
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [message];
 }
+
 
 class ProductsUpdateSuccess extends ProductsState {
-  final List<UIProduct> products;
-
-  ProductsUpdateSuccess(this.products);
-
   @override
-  List<Object> get props => [products];
+  List<Object> get props => [];
 }

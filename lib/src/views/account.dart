@@ -46,6 +46,7 @@ class AccountPage extends StatelessWidget {
                   ),
                 ),
                 Text((state as AuthStateSuccess).user.email, style: Theme.of(context).textTheme.headline1.copyWith(color: AppColors.moreWhite)),
+                Text((state as AuthStateSuccess).user.role.toString().replaceFirst("Role.",""), style: Theme.of(context).textTheme.headline2.copyWith(color: AppColors.moreWhite)),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
                   child: RaisedButton(

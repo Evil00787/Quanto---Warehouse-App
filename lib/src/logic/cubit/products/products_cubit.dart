@@ -17,40 +17,50 @@ class ProductsCubit extends Cubit<ProductsState> {
     emit(ProductsSuccess(response));
   }
 
-  Future<void> addProduct(String man, String model, String price, String id) async {
+  Future<void> addProduct(String man, String model, String price) async {
     JsonProduct product = JsonProduct(manufacturer: man, model: model, price: double.tryParse(price), quantity: 0);
     UIProduct ui = await _productsRepository.addProduct(product);
     if(ui != null) {
       emit(ProductsInitial());
     }
-    else emit(ProductsError());
+    else emit(ProductsError("Couldn't add a product. Check Internet connection and try again."));
   }
 
   Future<void> updateProduct(String man, String model, String price, String id) async {
     JsonProduct product = JsonProduct(manufacturer: man, model: model, price: double.tryParse(price), id: id);
     UIProduct ui = await _productsRepository.updateProduct(product);
     if(ui != null) {
-      emit(ProductsInitial());
+      emit(ProductsUpdateSuccess());
     }
-    else emit(ProductsError());
+    else emit(ProductsError("Couldn't update a product. Check Internet connection and try again."));
   }
 
   Future<void> changeQuantity(String id, int quantity) async {
     JsonProduct product = JsonProduct(id: id, quantity: quantity);
-    bool result = await _productsRepository.updateQuantityProduct(product);
-    if(result) {
-      emit(ProductsInitial());
+    JsonProduct productId = JsonProduct(id: id);
+    UIProduct uiProduct = await _productsRepository.getProduct(productId);
+    if(uiProduct == null) {
+      emit(ProductsError("Couldn't update a product. Check Internet connection and try again."));
     }
-    else emit(ProductsError());
+    else if(uiProduct.quantity + quantity < 0) {
+      emit(ProductsError("Quantity cannot be negative."));
+    } else {
+      bool result = await _productsRepository.updateQuantityProduct(product);
+      if(result) {
+        emit(ProductsUpdateSuccess());
+      }
+      else emit(ProductsError("Couldn't update a product. Check Internet connection and try again."));
+    }
+
   }
 
   Future<void> deleteProduct(String id) async {
     JsonProduct product = JsonProduct(id: id);
     bool result = await _productsRepository.deleteProduct(product);
     if(result) {
-      emit(ProductsInitial());
+      emit(ProductsUpdateSuccess());
     }
-    else emit(ProductsError());
+    else emit(ProductsError("Couldn't delete a product. Check Internet connection and try again."));
   }
 
   void resetState() {
