@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ium_warehouse/routing/routes.dart';
 import 'package:ium_warehouse/src/logic/cubit/auth/auth_cubit.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
+import 'package:ium_warehouse/src/services/http_cert_accept.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
 import 'package:ium_warehouse/src/utils/service_injection.dart';
 import 'package:ium_warehouse/src/views/edit_quantity.dart';
@@ -20,6 +23,7 @@ Future<void> main() async {
   injectServices();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  HttpOverrides.global = new MyHttpOverrides();
   runApp(
     MultiBlocProvider(
       providers: [
