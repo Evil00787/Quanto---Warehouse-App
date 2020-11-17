@@ -11,10 +11,13 @@ class AppColors {
 
   static final Color notWhite = Colors.white70;
   static final Color moreWhite = Color.fromARGB(230, 255, 255, 255);
+  static final Color evenMoreWhite = Color.fromARGB(245, 255, 255, 255);
+
   static final Color slightlyGray = Colors.grey;
+  static final Color evenSlighterGray = Colors.grey[800];
   static final Color notBlack = Colors.black87;
 
-  static final Color mainColor = Colors.purple[800];
+  static final Color mainColor = Color.fromARGB(255, 193, 65, 100);
   static final Color accentColor = Color.fromARGB(225, 193, 65, 100);
 
   static final Color negativeColor = Colors.red;

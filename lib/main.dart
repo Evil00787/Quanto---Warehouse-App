@@ -1,11 +1,38 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ium_warehouse/routing/routes.dart';
+import 'package:ium_warehouse/src/logic/cubit/auth/auth_cubit.dart';
+import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
+import 'package:ium_warehouse/src/utils/service_injection.dart';
+import 'package:ium_warehouse/src/views/edit_quantity.dart';
+import 'package:ium_warehouse/src/views/account.dart';
+import 'package:ium_warehouse/src/views/add_product.dart';
+import 'package:ium_warehouse/src/views/dashboard.dart';
+import 'package:ium_warehouse/src/views/edit_product.dart';
 import 'package:ium_warehouse/src/views/login.dart';
 import 'package:ium_warehouse/src/views/home.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  injectServices();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<ProductsCubit>(
+          create: (context) => ProductsCubit(),
+        ),
+        BlocProvider<AuthCubit>(
+          create: (context) => AuthCubit(GoogleSignIn(), FirebaseAuth.instance),
+        )
+      ],
+      child: MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,14 +40,26 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Quanto',
-      initialRoute: '/',
-      routes: {
-        AppRoute.home.name : f(HomePage()),
-        AppRoute.login.name : f(LoginPage()),
-      },
+      initialRoute: '/login',
+      routes: _getRoutes(),
       theme: _createAppTheme(),
     );
   }
+
+  Map<String, WidgetBuilder> _getRoutes() {
+    var getRoute = (BuildContext context) => ModalRoute.of(context);
+    var getParams = (BuildContext context) => getRoute(context).settings.arguments;
+    return {
+      AppRoute.home.name : f(HomePage()),
+      AppRoute.login.name : f(LoginPage()),
+      AppRoute.dashboard.name : f(DashboardPage()),
+      AppRoute.account.name : f(AccountPage()),
+      AppRoute.add.name: f(AddProductPage()),
+      AppRoute.edit.name: (context) => (EditProductPage(getParams(context))),
+      AppRoute.quantity.name: (context) => (EditQuantity(getParams(context)))
+    };
+  }
+
 
   Widget Function(BuildContext) f(Widget page) {
     return (context) => page;

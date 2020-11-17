@@ -118,3 +118,8 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+/android/app/google-services.json
+/android/app/src/main/res/values/strings.xml
+/android/google-services.json
+/google-services.json
+/android/settings_aar.gradle
