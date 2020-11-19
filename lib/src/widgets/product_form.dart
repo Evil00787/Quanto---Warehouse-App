@@ -144,9 +144,9 @@ class _ProductFormState extends State<ProductForm> {
       return "Field cannot be empty";
     try {
       double a = double.parse(s);
-      if(s.contains(".") && s.indexOf(".") != s.length -2 && s.indexOf(".") != s.length - 1 && s.indexOf(".") != s.length - 1)
-        return "Only 2 numbers after dot are allowed";
-      return null;
+      if(s.contains(".") && (s.indexOf(".") == s.length -2 || s.indexOf(".") == s.length - 3))
+        return null;
+      return "Only 2 numbers after dot are allowed";
     } on Exception {
       return "Incorrect value";
     }
