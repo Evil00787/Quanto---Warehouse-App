@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ium_warehouse/src/logic/cubit/offline/offline_cubit.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/models/ui/product.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
@@ -112,15 +113,21 @@ class _ProductFormState extends State<ProductForm> {
     );
   }
 
-  void onFormButtonPressed() {
+  Future<void> onFormButtonPressed() async {
     if(_key.currentState.validate()) {
       if(widget.isUpdate) {
         BlocProvider.of<ProductsCubit>(context).updateProduct(_man.text, _model.text, _price.text, widget.product.id);
+        if(!BlocProvider.of<OfflineCubit>(context).isOn) {
+          BlocProvider.of<ProductsCubit>(context).update.add([_man.text, _model.text, _price.text, widget.product.id, widget.product]);
+        }
         Navigator.of(context).pop();
 
       }
       else {
-        BlocProvider.of<ProductsCubit>(context).addProduct(_man.text, _model.text, _price.text);
+        String id = (await BlocProvider.of<ProductsCubit>(context).addProduct(_man.text, _model.text, _price.text))[1];
+        if(!BlocProvider.of<OfflineCubit>(context).isOn) {
+          BlocProvider.of<ProductsCubit>(context).add.add([_man.text, _model.text, _price.text, id]);
+        }
       }
       if(widget.onClick != null) widget.onClick();
     } else {
@@ -144,7 +151,7 @@ class _ProductFormState extends State<ProductForm> {
       return "Field cannot be empty";
     try {
       double a = double.parse(s);
-      if(s.contains(".") && (s.indexOf(".") == s.length -2 || s.indexOf(".") == s.length - 3))
+      if((s.contains(".") && (s.indexOf(".") == s.length -2 || s.indexOf(".") == s.length - 3)) || !s.contains("."))
         return null;
       return "Only 2 numbers after dot are allowed";
     } on Exception {

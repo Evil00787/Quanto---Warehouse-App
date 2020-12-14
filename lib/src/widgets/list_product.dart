@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:ium_warehouse/routing/routes.dart';
 import 'package:ium_warehouse/src/logic/cubit/auth/auth_cubit.dart';
+import 'package:ium_warehouse/src/logic/cubit/offline/offline_cubit.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/models/ui/product.dart';
 import 'package:ium_warehouse/src/models/ui/user.dart';
@@ -13,8 +14,9 @@ import 'package:ndialog/ndialog.dart';
 
 class ListProduct extends StatefulWidget {
   final UIProduct uiProduct;
+  final bool isDeleted;
 
-  const ListProduct(this.uiProduct);
+  const ListProduct(this.uiProduct, {this.isDeleted = false});
 
   @override
   _ListProductState createState() => _ListProductState();
@@ -28,8 +30,8 @@ class _ListProductState extends State<ListProduct> {
     canDelete = (BlocProvider.of<AuthCubit>(context).state as AuthStateSuccess).user.role != Role.Employee;
     return Slidable(
       actionPane: SlidableBehindActionPane(),
-      actions: canDelete ? [_getItem(Icons.delete_outline, 'Delete', _onProductDelete, Colors.redAccent)] : null,
-      secondaryActions: [_getItem(Icons.edit_outlined, 'Edit', onEditForm, Colors.blue)],
+      actions: canDelete && !widget.isDeleted ? [_getItem(Icons.delete_outline, 'Delete', _onProductDelete, Colors.redAccent)] : null,
+      secondaryActions: !widget.isDeleted ? [_getItem(Icons.edit_outlined, 'Edit', onEditForm, Colors.blue)] : null,
       child: _mainCard()
     );
   }
@@ -46,7 +48,7 @@ class _ListProductState extends State<ListProduct> {
           splashColor: AppColors.slightlyGray,
           focusColor: AppColors.evenSlighterGray,
           borderRadius: BorderRadius.all(Radius.circular(8)),
-          onTap: onQuantityForm,
+          onTap: !widget.isDeleted ? onQuantityForm : null,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
             child: Row(
@@ -196,6 +198,9 @@ class _ListProductState extends State<ListProduct> {
                           ),
                           onPressed: () {
                             BlocProvider.of<ProductsCubit>(context).deleteProduct(widget.uiProduct.id);
+                            if(!BlocProvider.of<OfflineCubit>(context).isOn) {
+                              BlocProvider.of<ProductsCubit>(context).delete.add([widget.uiProduct.id, widget.uiProduct]);
+                            }
                             Navigator.pop(context);
                           },
                         ),

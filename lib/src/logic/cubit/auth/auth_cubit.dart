@@ -7,6 +7,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ium_warehouse/src/models/json/json_user.dart';
 import 'package:ium_warehouse/src/models/ui/user.dart';
 import 'package:ium_warehouse/src/services/db/users_rep.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ium_warehouse/src/services/db/server_api.dart';
 
 part 'auth_state.dart';
 
@@ -15,6 +17,8 @@ class AuthCubit extends Cubit<AuthState> {
   final GoogleSignIn _googleSignIn;
   final FirebaseAuth _auth;
   bool wasGoogle;
+  SharedPreferences prefs;
+
 
   AuthCubit(this._googleSignIn, this._auth) : super(AuthStateInitial());
 
@@ -25,14 +29,21 @@ class AuthCubit extends Cubit<AuthState> {
       if(response) emit(AuthStateError('connection' + DateTime.now().toString()));
       else emit(AuthStateError('success' + DateTime.now().toString()));
     }
-    else emit(AuthStateSuccess(response as UIUser));
+    else {
+      var user = response as UIUser;
+      setUserLoggedIn();
+      saveUserInfo(user.email, user.role);
+      emit(AuthStateSuccess(user));
+    }
     wasGoogle = false;
+    setGoogle(isLoggedIn: false);
   }
 
   Future<void> logoutUser() async {
     dynamic response = await _userRepository.logout();
     if(wasGoogle)
       await _googleSignIn.signOut();
+    setUserLoggedIn(isLoggedIn: false);
     if(response)
       emit(AuthStateInitial());
   }
@@ -65,9 +76,14 @@ class AuthCubit extends Cubit<AuthState> {
         if(response) emit(AuthStateError('connection' + DateTime.now().toString()));
         else emit(AuthStateError('success' + DateTime.now().toString()));
       }
-      else emit(AuthStateSuccess(response as UIUser));
-
+      else {
+        var user = response as UIUser;
+        emit(AuthStateSuccess(user));
+        setUserLoggedIn();
+        saveUserInfo(user.email, user.role);
+      }
       wasGoogle = true;
+      setGoogle();
       return '$user';
     }
 
@@ -78,4 +94,38 @@ class AuthCubit extends Cubit<AuthState> {
     await Firebase.initializeApp();
   }
 
+  Future<void> autoLogin() async {
+    prefs = await SharedPreferences.getInstance();
+    if(isUserLoggedIn()) {
+      wasGoogle = getGoogle();
+      ServerApi api = GetIt.I<ServerApi>();
+      api.initApi();
+      emit(AuthStateSuccess(getUserInfo()));
+    }
+  }
+
+  bool isUserLoggedIn() {
+    return prefs != null && prefs.containsKey("isLoggedIn") && prefs.getBool("isLoggedIn");
+  }
+
+  void setUserLoggedIn({bool isLoggedIn = true}) {
+    prefs?.setBool("isLoggedIn", isLoggedIn);
+  }
+
+  void setGoogle({bool isLoggedIn = true}) {
+    prefs?.setBool("isLoggedIn", isLoggedIn);
+  }
+
+  bool getGoogle({bool isLoggedIn = true}) {
+    return prefs?.getBool("isLoggedIn");
+  }
+
+  void saveUserInfo(String mail, Role role) {
+    prefs?.setStringList("user", [mail, role.index.toString()]);
+  }
+
+  UIUser getUserInfo() {
+    var info = prefs?.getStringList("user");
+    return UIUser(info[0], Role.values[int.parse(info[1])]);
+  }
 }

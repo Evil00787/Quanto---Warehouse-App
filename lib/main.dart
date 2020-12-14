@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ium_warehouse/routing/routes.dart';
 import 'package:ium_warehouse/src/logic/cubit/auth/auth_cubit.dart';
+import 'package:ium_warehouse/src/logic/cubit/offline/offline_cubit.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/services/http_cert_accept.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
@@ -32,6 +33,9 @@ Future<void> main() async {
         ),
         BlocProvider<AuthCubit>(
           create: (context) => AuthCubit(GoogleSignIn(), FirebaseAuth.instance),
+        ),
+        BlocProvider<OfflineCubit>(
+          create: (context) => OfflineCubit()
         )
       ],
       child: MyApp()
@@ -44,7 +48,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Quanto',
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: _getRoutes(),
       theme: _createAppTheme(),
     );

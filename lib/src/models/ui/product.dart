@@ -12,6 +12,10 @@ class UIProduct extends Equatable{
   UIProduct.fromJson(Map<String, dynamic> json) : manufacturer = json[DbProductStrings.manufacturer], id = json[DbProductStrings.id],
     modelName = json[DbProductStrings.model], price = json[DbProductStrings.price], quantity = json[DbProductStrings.quantity];
 
+  String toStringNice() {
+    return manufacturer + " " + modelName + " - Price: " + price.toString() + " Quantity: " + quantity.toString();
+  }
+
   @override
   List<Object> get props => [id, manufacturer, modelName, price, quantity];
 }

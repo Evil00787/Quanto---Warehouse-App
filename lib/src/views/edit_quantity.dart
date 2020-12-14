@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ium_warehouse/src/logic/cubit/offline/offline_cubit.dart';
 import 'package:ium_warehouse/src/logic/cubit/products/products_cubit.dart';
 import 'package:ium_warehouse/src/models/ui/product.dart';
 import 'package:ium_warehouse/src/ui/app_colors.dart';
@@ -201,6 +202,9 @@ class _EditQuantityPageState extends State<EditQuantity> {
   Future<void> onChangeQuantity() async {
     if(_key.currentState.validate()) {
       await BlocProvider.of<ProductsCubit>(context).changeQuantity(widget.uiProduct.id, int.parse(_value.text));
+      if(!BlocProvider.of<OfflineCubit>(context).isOn) {
+        BlocProvider.of<ProductsCubit>(context).quantity.add([widget.uiProduct.id, int.parse(_value.text), widget.uiProduct]);
+      }
       Navigator.pop(context);
     } else {
       CustomToast(

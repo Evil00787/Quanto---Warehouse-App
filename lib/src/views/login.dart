@@ -65,6 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                         }
                       },
                       builder: (context, state) {
+                        if(state is AuthStateInitial)
+                          BlocProvider.of<AuthCubit>(context).autoLogin();
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32.0),
                           child: DecoratedBox(
