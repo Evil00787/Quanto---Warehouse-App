@@ -31,9 +31,9 @@ class AuthCubit extends Cubit<AuthState> {
     }
     else {
       var user = response as UIUser;
+      emit(AuthStateSuccess(user));
       setUserLoggedIn();
       saveUserInfo(user.email, user.role);
-      emit(AuthStateSuccess(user));
     }
     wasGoogle = false;
     setGoogle(isLoggedIn: false);
@@ -113,11 +113,11 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setGoogle({bool isLoggedIn = true}) {
-    prefs?.setBool("isLoggedIn", isLoggedIn);
+    prefs?.setBool("isGoogle", isLoggedIn);
   }
 
   bool getGoogle({bool isLoggedIn = true}) {
-    return prefs?.getBool("isLoggedIn");
+    return prefs?.getBool("isGoogle");
   }
 
   void saveUserInfo(String mail, Role role) {

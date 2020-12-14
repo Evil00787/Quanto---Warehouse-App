@@ -219,11 +219,11 @@ class _ListProductState extends State<ListProduct> {
 
 
 
-  void onEditForm() {
-    Navigator.of(context).pushNamed(AppRoute.edit.name, arguments: widget.uiProduct);
+  Future<void> onEditForm() async {
+    Navigator.of(context).pushNamed(AppRoute.edit.name, arguments: await BlocProvider.of<ProductsCubit>(context).getProduct(widget.uiProduct.id));
   }
 
-  void onQuantityForm() {
-    Navigator.of(context).pushNamed(AppRoute.quantity.name, arguments: widget.uiProduct);
+  Future<void> onQuantityForm() async {
+    Navigator.of(context).pushNamed(AppRoute.quantity.name, arguments: await BlocProvider.of<ProductsCubit>(context).getProduct(widget.uiProduct.id));
   }
 }
