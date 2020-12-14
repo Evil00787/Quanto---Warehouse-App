@@ -60,17 +60,79 @@ class _ProductsState extends State<ProductsPage> {
               builder: (context, state) {
                 if (state is ProductsInitial) {
                   BlocProvider.of<ProductsCubit>(context).getProducts();
-                  return Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.moreWhite))
-                    ),
+                  return Column(
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                            "Warehouse",
+                            style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, fontSize: 48),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                (networkState as OfflineStateAll).isOnline ? "Online" : "Offline",
+                                style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, fontSize: 20),
+                              ),
+                              Switch(
+                                value: (networkState as OfflineStateAll).isOnline,
+                                onChanged: (value) => onChangedSwitch(value),
+                                activeColor: AppColors.mainColor,
+                                activeTrackColor: AppColors.accentColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.moreWhite))
+                      ),
+                    ],
                   );
                 }
                 else if (state is ProductsError)
-                  return Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.moreWhite), )
-                    ),
+                  return Column(
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                            "Warehouse",
+                            style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, fontSize: 48),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                (networkState as OfflineStateAll).isOnline ? "Online" : "Offline",
+                                style: Theme.of(context).textTheme.headline1.copyWith(color: Colors.white, fontSize: 20),
+                              ),
+                              Switch(
+                                value: (networkState as OfflineStateAll).isOnline,
+                                onChanged: (value) => onChangedSwitch(value),
+                                activeColor: AppColors.mainColor,
+                                activeTrackColor: AppColors.accentColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.moreWhite), )
+                      ),
+                    ],
                   );
                 return Expanded(
                   child: Padding(

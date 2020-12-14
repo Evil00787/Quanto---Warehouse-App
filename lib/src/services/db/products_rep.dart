@@ -16,12 +16,11 @@ class ProductsRepository {
     dynamic json;
     if(isOnilne) {
       json = await api.getDb(ProductAddresses.products);
-      saveToLocalStorage(json);
     }
     else json = await getLocalProducts();
     if (json is bool) {
       return null;
-    }
+    } else saveToLocalStorage(json);
     List<UIProduct> products = (json as List).map((e) => UIProduct.fromJson(e)).toList();
     return products;
   }
