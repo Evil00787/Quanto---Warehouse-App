@@ -5,7 +5,8 @@ Google Sign-In, REST and some fancy widgets
 
 
 
-![Screenshot_20210423-144321-min](https://user-images.githubusercontent.com/37753289/115877512-cfbf8300-a447-11eb-95bf-d893bbc2df01.png) ![Screenshot_20210423-144318-min](https://user-images.githubusercontent.com/37753289/115877549-dbab4500-a447-11eb-83b5-10dc02af7e8d.png) ![Screenshot_20210423-150651-min](https://user-images.githubusercontent.com/37753289/115877577-e1a12600-a447-11eb-83ce-a5620f61fd81.png)
+![Screenshot_20210423-144321](https://user-images.githubusercontent.com/37753289/115877689-039aa880-a448-11eb-9cd3-08eb1247e9ac.png) ![Screenshot_20210423-144318](https://user-images.githubusercontent.com/37753289/115877719-0d241080-a448-11eb-8afe-dd35a34efb66.png) ![Screenshot_20210423-150651](https://user-images.githubusercontent.com/37753289/115877744-144b1e80-a448-11eb-8c97-034cfa7804a9.png)
+
 
 
 
